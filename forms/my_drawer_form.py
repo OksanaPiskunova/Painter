@@ -27,13 +27,19 @@ class MyGraphicsView(QtGui.QGraphicsView):
         self.controller = controller
         self.setMouseTracking(True)
 
-    def mousePressEvent(self, mouse_event):
-        if mouse_event.button() & QtCore.Qt.LeftButton:
-            x = mouse_event.x()
-            y = mouse_event.y()
+    def mousePressEvent(self, QMouseEvent):
+        if QMouseEvent.button() & QtCore.Qt.LeftButton:
+            x = QMouseEvent.x()
+            y = QMouseEvent.y()
             self.controller.add_to_buffer((x, y))
-        if mouse_event.button() & QtCore.Qt.RightButton:
+        if QMouseEvent.button() & QtCore.Qt.RightButton:
             self.controller.check_buffer()
+        self._show_scene()
+
+    def mouseMoveEvent(self, QMouseEvent):
+        x = QMouseEvent.x()
+        y = QMouseEvent.y()
+        self.controller.set_curr_position((x, y))
         self._show_scene()
 
     def _show_scene(self):
@@ -114,18 +120,26 @@ class MainWindow(object):
         self.btn_clear.setGeometry(QtCore.QRect(686, 540, 125, 27))
         self.btn_clear.setObjectName(_fromUtf8("btnClear"))
 
+        # create button "ColorDialog for PenColor"
+        self.btn_colordialog_pen = QtGui.QPushButton(main_window)
+        self.btn_colordialog_pen.setGeometry(QtCore.QRect(5, 542, 35, 35))
+        self.btn_colordialog_pen.setObjectName(_fromUtf8("btnColorDlgPen"))
+
+        self.pen_colordialdog = QtGui.QColorDialog()
+        self._init_pen()
+
         # create menu "File"
         self.menubar = QtGui.QMenuBar(main_window)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 0, 0))
 
         # create a trigger-action => binding
         self.menu_file_exit = QtGui.QAction(self.main)
-        self.menu_file_exit.setText(self._to_utf("&Выход"))
+        self.menu_file_exit.setText(self._to_utf("&Exit"))
         main_window.connect(self.menu_file_exit,
                             QtCore.SIGNAL('triggered()'), sys.exit)
 
         # create a menu
-        self.menu_file = self.menubar.addMenu(self._to_utf('&Файл'))
+        self.menu_file = self.menubar.addMenu(self._to_utf('&File'))
         self.menu_file.addAction(self.menu_file_exit)
         main_window.setMenuBar(self.menubar)
 
@@ -156,54 +170,78 @@ class MainWindow(object):
                                self._on_clicked_btn_draw_circle)
         QtCore.QObject.connect(self.btn_clear, QtCore.SIGNAL("clicked()"),
                                self._on_clicked_btn_clear)
+        QtCore.QObject.connect(self.btn_colordialog_pen, QtCore.SIGNAL("clicked()"),
+                               self._on_clicked_btn_colordialog_pen)
 
     def retranslate_ui(self, MainWindow):
-        MainWindow.setWindowTitle(self._to_utf("Окошечко"))
-        self.btn_draw_all.setText(self._to_utf("Нарисовать все"))
-        self.btn_draw_line.setText(self._to_utf("Линия"))
-        self.btn_draw_polygon.setText(self._to_utf("Многоугольник"))
-        self.btn_draw_quadrangle.setText(self._to_utf("Четырехугольник"))
-        self.btn_draw_triangle.setText(self._to_utf("Треугольник"))
-        self.btn_draw_rectangle.setText(self._to_utf("Прямоугольник"))
-        self.btn_draw_square.setText(self._to_utf("Квадрат"))
-        self.btn_draw_ellipse.setText(self._to_utf("Эллипс"))
-        self.btn_draw_circle.setText(self._to_utf("Круг"))
-        self.btn_clear.setText(self._to_utf("Очистить"))
+        MainWindow.setWindowTitle(self._to_utf("PyPanda"))
+        self.btn_draw_all.setText(self._to_utf("Draw all"))
+        self.btn_draw_line.setText(self._to_utf("Line"))
+        self.btn_draw_polygon.setText(self._to_utf("Polygon"))
+        self.btn_draw_quadrangle.setText(self._to_utf("Quadrangle"))
+        self.btn_draw_triangle.setText(self._to_utf("Triangle"))
+        self.btn_draw_rectangle.setText(self._to_utf("Rectangle"))
+        self.btn_draw_square.setText(self._to_utf("Square"))
+        self.btn_draw_ellipse.setText(self._to_utf("Ellipse"))
+        self.btn_draw_circle.setText(self._to_utf("Circle"))
+        self.btn_clear.setText(self._to_utf("Clear"))
 
     def _to_utf(self, text):
         return QtGui.QApplication.translate("MainWindow", text, None,
                                             QtGui.QApplication.UnicodeUTF8)
 
+    def _init_pen(self):
+        self.pen = QtGui.QPen()
+        self.pen.setStyle(QtCore.Qt.SolidLine)
+        self.pen.setWidth(2)
+        self.pen.setBrush(QtCore.Qt.black)
+        self.pen.setCapStyle(QtCore.Qt.RoundCap)
+        self.pen.setJoinStyle(QtCore.Qt.RoundJoin)
+
+    # methods for drawing
     def _on_clicked_btn_draw_all(self):
         self.controller.process_list()
         self.set_scene()
 
     def _on_clicked_btn_draw_line(self):
         self.controller.process_line()
+        self.set_scene()
 
     def _on_clicked_btn_draw_polygon(self):
         self.controller.process_polygon()
+        self.set_scene()
 
     def _on_clicked_btn_draw_quadrangle(self):
         self.controller.process_quadrangle()
+        self.set_scene()
 
     def _on_clicked_btn_draw_triangle(self):
         self.controller.process_triangle()
+        self.set_scene()
 
     def _on_clicked_btn_draw_rectangle(self):
         self.controller.process_rectangle()
+        self.set_scene()
 
     def _on_clicked_btn_draw_square(self):
         self.controller.process_square()
+        self.set_scene()
 
     def _on_clicked_btn_draw_ellipse(self):
         self.controller.process_ellipse()
+        self.set_scene()
 
     def _on_clicked_btn_draw_circle(self):
         self.controller.process_circle()
+        self.set_scene()
 
     def _on_clicked_btn_clear(self):
         self.controller.clear_scene()
+
+    def _on_clicked_btn_colordialog_pen(self):
+        #self.pen_colordialdog.open()
+        self.pen.setColor(self.pen_colordialdog.getColor())
+        self.controller.set_pen(self.pen)
 
     def set_scene(self):
         self.scene = self.controller.scene

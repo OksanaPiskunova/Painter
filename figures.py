@@ -24,7 +24,7 @@ class Line(Figure):
 
     @staticmethod
     def get_param_count():
-        return two_param
+        return TWO_PARAM
 
 
 class Polygon(Figure):
@@ -37,7 +37,7 @@ class Polygon(Figure):
 
     @staticmethod
     def get_param_count():
-        return unknown_param
+        return UNKNOWN_PARAM
 
 
 class Triangle(Polygon):
@@ -50,7 +50,7 @@ class Triangle(Polygon):
 
     @staticmethod
     def get_param_count():
-        return three_param
+        return THREE_PARAM
 
 
 class Quadrangle(Polygon):
@@ -63,7 +63,7 @@ class Quadrangle(Polygon):
 
     @staticmethod
     def get_param_count():
-        return four_param
+        return FOUR_PARAM
 
 
 class Rectangle(Quadrangle):
@@ -78,7 +78,7 @@ class Rectangle(Quadrangle):
 
     @staticmethod
     def get_param_count():
-        return two_param
+        return TWO_PARAM
 
 
 class Square(Rectangle):
@@ -94,7 +94,7 @@ class Square(Rectangle):
 
     @staticmethod
     def get_param_count():
-        return two_param
+        return TWO_PARAM
 
 
 class Ellipse(Figure):
@@ -110,7 +110,7 @@ class Ellipse(Figure):
 
     @staticmethod
     def get_param_count():
-        return two_param
+        return TWO_PARAM
 
 
 class Circle(Ellipse):
@@ -126,7 +126,7 @@ class Circle(Ellipse):
 
     @staticmethod
     def get_param_count():
-        return two_param
+        return TWO_PARAM
 
 
 class Transformation:
@@ -135,10 +135,7 @@ class Transformation:
 
     @staticmethod
     def get_width_of_rect(point_a, point_b):
-        razn = point_b[0] - point_a[0]
-        abs_razn = abs(razn)
-        return abs_razn
-        #return abs(point_b[0] - point_a[0])
+        return abs(point_b[0] - point_a[0])
 
     @staticmethod
     def get_height_of_rect(point_a, point_b):
@@ -183,8 +180,8 @@ class Transformation:
             return point_a[1] - side
 
 
-unknown_param = 0
-one_param = 1
-two_param = 2
-three_param = 3
-four_param = 4
+UNKNOWN_PARAM = 0
+ONE_PARAM = 1
+TWO_PARAM = 2
+THREE_PARAM = 3
+FOUR_PARAM = 4

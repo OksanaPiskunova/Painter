@@ -3,7 +3,7 @@
 import figures
 
 
-class ListOfFigures:
+class StaticListOfFigures:
     def __init__(self):
         self.list = []
         self._create_figures()
@@ -23,4 +23,21 @@ class ListOfFigures:
         self.list.append(figures.Circle(((10, 200), (60, 400))))
 
 
-fig_list = ListOfFigures()
+class ListOfFigures:
+    def __init__(self):
+        self._init_list()
+
+    def _init_list(self):
+        self.list = []
+
+    def add_figure(self, figure):
+        self.list.append(figure)
+
+    def get_element_count(self):
+        return len(self.list)
+
+    def delete_figure(self, figure):
+        self.list.remove(figure)
+
+
+fig_list = StaticListOfFigures()
