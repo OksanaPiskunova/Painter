@@ -3,7 +3,8 @@
 
 class Figure:
     """abstract class"""
-    pass
+    def __init__(self):
+        self.points = []
 
     @staticmethod
     def get_type():
